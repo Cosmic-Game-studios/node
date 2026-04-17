@@ -261,6 +261,8 @@ void DynamicLibrary::New(const FunctionCallbackInfo<Value>& args) {
 }
 
 void DynamicLibrary::Close(const FunctionCallbackInfo<Value>& args) {
+  Environment* env = Environment::GetCurrent(args);
+  THROW_IF_INSUFFICIENT_PERMISSIONS(env, permission::PermissionScope::kFFI, "");
   DynamicLibrary* lib = Unwrap<DynamicLibrary>(args.This());
   // Closing a library from one of its active callbacks is unsupported and
   // dangerous. Callbacks must return before the owning library is closed.
@@ -269,6 +271,7 @@ void DynamicLibrary::Close(const FunctionCallbackInfo<Value>& args) {
 
 void DynamicLibrary::InvokeFunction(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
+  THROW_IF_INSUFFICIENT_PERMISSIONS(env, permission::PermissionScope::kFFI, "");
   FFIFunctionInfo* info =
       static_cast<FFIFunctionInfo*>(args.Data().As<External>()->Value());
   FFIFunction* fn = info->fn.get();
@@ -431,6 +434,7 @@ void DynamicLibrary::GetPath(const FunctionCallbackInfo<Value>& args) {
 
 void DynamicLibrary::GetFunction(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
+  THROW_IF_INSUFFICIENT_PERMISSIONS(env, permission::PermissionScope::kFFI, "");
   Isolate* isolate = env->isolate();
 
   if (args.Length() < 1 || !args[0]->IsString()) {
@@ -479,6 +483,7 @@ void DynamicLibrary::GetFunction(const FunctionCallbackInfo<Value>& args) {
 
 void DynamicLibrary::GetFunctions(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
+  THROW_IF_INSUFFICIENT_PERMISSIONS(env, permission::PermissionScope::kFFI, "");
   Isolate* isolate = env->isolate();
   Local<Context> context = env->context();
   DynamicLibrary* lib = Unwrap<DynamicLibrary>(args.This());
@@ -609,6 +614,7 @@ void DynamicLibrary::GetFunctions(const FunctionCallbackInfo<Value>& args) {
 
 void DynamicLibrary::GetSymbol(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
+  THROW_IF_INSUFFICIENT_PERMISSIONS(env, permission::PermissionScope::kFFI, "");
   Isolate* isolate = env->isolate();
 
   if (args.Length() < 1 || !args[0]->IsString()) {
@@ -635,6 +641,7 @@ void DynamicLibrary::GetSymbol(const FunctionCallbackInfo<Value>& args) {
 
 void DynamicLibrary::GetSymbols(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
+  THROW_IF_INSUFFICIENT_PERMISSIONS(env, permission::PermissionScope::kFFI, "");
   Isolate* isolate = env->isolate();
   Local<Context> context = env->context();
   DynamicLibrary* lib = Unwrap<DynamicLibrary>(args.This());
@@ -673,6 +680,7 @@ void DynamicLibrary::GetSymbols(const FunctionCallbackInfo<Value>& args) {
 
 void DynamicLibrary::RegisterCallback(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
+  THROW_IF_INSUFFICIENT_PERMISSIONS(env, permission::PermissionScope::kFFI, "");
   Isolate* isolate = env->isolate();
 
   ffi_type* return_type = &ffi_type_void;
@@ -793,6 +801,7 @@ void DynamicLibrary::RegisterCallback(const FunctionCallbackInfo<Value>& args) {
 void DynamicLibrary::UnregisterCallback(
     const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
+  THROW_IF_INSUFFICIENT_PERMISSIONS(env, permission::PermissionScope::kFFI, "");
   DynamicLibrary* lib = Unwrap<DynamicLibrary>(args.This());
 
   if (lib->handle_ == nullptr) {
@@ -828,6 +837,7 @@ void DynamicLibrary::UnregisterCallback(
 
 void DynamicLibrary::RefCallback(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
+  THROW_IF_INSUFFICIENT_PERMISSIONS(env, permission::PermissionScope::kFFI, "");
   DynamicLibrary* lib = Unwrap<DynamicLibrary>(args.This());
 
   if (lib->handle_ == nullptr) {
@@ -858,6 +868,7 @@ void DynamicLibrary::RefCallback(const FunctionCallbackInfo<Value>& args) {
 
 void DynamicLibrary::UnrefCallback(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
+  THROW_IF_INSUFFICIENT_PERMISSIONS(env, permission::PermissionScope::kFFI, "");
   DynamicLibrary* lib = Unwrap<DynamicLibrary>(args.This());
 
   if (lib->handle_ == nullptr) {
